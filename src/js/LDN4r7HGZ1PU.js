@@ -62,10 +62,10 @@ class V {
   }
   createSMAAEffect() {
     const t = {
-        preset: G.HIGH,
-        edgeDetectionMode: A.COLOR,
-        predicationMode: W.DISABLED,
-      },
+      preset: G.HIGH,
+      edgeDetectionMode: A.COLOR,
+      predicationMode: W.DISABLED,
+    },
       i = new z(t),
       e = new E(this.camera, i);
     this.composer.addPass(e);
@@ -159,6 +159,7 @@ class B {
         antialias: !1,
         alpha: !1,
         depth: !0,
+        dithering: !1,
       })),
       y.appendChild(this.renderer.domElement),
       this.renderer.setSize(v.width, v.height),
@@ -195,12 +196,12 @@ class B {
       (this.cameraTransforms = []),
       this.loadResources(),
       this.isMobile &&
-        ((this.lenis = new I({
-          syncTouch: !0,
-          smoothWheel: !0,
-          touchMultiplier: 1,
-          touchInertiaMultiplier: 10,
-        })),
+      ((this.lenis = new I({
+        syncTouch: !0,
+        smoothWheel: !0,
+        touchMultiplier: 1,
+        touchInertiaMultiplier: 10,
+      })),
         this.lenis.on("scroll", ScrollTrigger.update),
         gsap.ticker.lagSmoothing(0)),
       gsap.ticker.add(this.update.bind(this)),
@@ -211,13 +212,15 @@ class B {
   }
   async loadResources() {
     const t = document.querySelector("#introVideo"),
-      i = t.querySelector("video");
-    ((i.autoplay = !1),
-      (i.loop = !1),
-      (t.style.display = "block"),
-      this.loadTextures(),
-      this.loadModels(),
-      this.loadSVGs());
+      i = t ? t.querySelector("video") : null;
+    if (t && i) {
+      i.autoplay = !1;
+      i.loop = !1;
+      t.style.display = "block";
+    }
+    this.loadTextures();
+    this.loadModels();
+    this.loadSVGs();
     let e,
       a = { value: 0 },
       s =
@@ -277,16 +280,20 @@ class B {
       duration: 2,
       ease: CustomEase.create("custom", s),
       onUpdate: () => {
-        (e.progress(p.value), (i.currentTime = 0), p.value === 1 && x());
+        e.progress(p.value);
+        if (i) i.currentTime = 0;
+        p.value === 1 && x();
       },
     });
     function x() {
       e.then(() => {
         setTimeout(() => {
-          (i.play(),
-            setTimeout(() => {
-              h.play();
-            }, 2200));
+          if (i) {
+            i.play();
+            setTimeout(() => { h.play(); }, 2200);
+          } else {
+            h.play(); // Play transition immediately if no video
+          }
         }, f * 1e3);
       });
     }
@@ -302,7 +309,7 @@ class B {
   loadSVGs() {
     const t = new P(this.loadingManager),
       i = [
-        `${S}/assets/ravenLogo.svg`,
+        `${S}/assets/aeroAiLogo.svg`,
         `${S}/assets/centralized_icon.svg`,
         `${S}/assets/decentralized_icon.svg`,
       ],
@@ -337,7 +344,7 @@ class B {
         #define USE_FOG true
         #include <fog_pars_fragment>
         // FOG
-
+ 
         float getSineWave(float x, float frequency, float amplitude, float phase) {
           return sin(x * frequency + phase) * amplitude;
         }
@@ -348,7 +355,7 @@ class B {
           wave = abs(wave);
           wave = 1. - wave;
           gl_FragColor = vec4(uColor1,1.);
-
+ 
           // FOG
           #include <fog_fragment>
           // FOG
@@ -370,18 +377,17 @@ class B {
         }
         if (
           ((a = O.mergeGeometries(g)),
-          a.center(),
-          a.rotateX(Math.PI / 2),
-          a.rotateZ(Math.PI),
-          s.includes("ravenLogo"))
+            a.center(),
+            a.rotateX(-Math.PI / 2),
+            s.includes("aeroAiLogo"))
         ) {
-          a.scale(0.0016, 0.0016, 0.0016);
+          a.scale(0.0014, 0.0014, 0.0014);
           const n = new o.Mesh(a, e);
-          n.position.set(-6.36641, 0.639, -15.1066);
+          n.position.set(-6.36641, 0.66, -15.1066);
           const c = n.clone();
-          c.position.set(11.0921, 0.59, -5.28589);
+          c.position.set(11.0921, 0.66, -5.28589);
           const d = n.clone();
-          (d.position.set(-7.32533, 0.535374, 22.5073),
+          (d.position.set(-7.32533, 0.66, 22.5073),
             this.scene.add(n, c, d));
         } else if (s.includes("decentralized_icon")) {
           a.scale(53e-5, 53e-5, 53e-5);
@@ -444,7 +450,7 @@ class B {
   }
   loadModels() {
     this.gltfLoader.load(
-      `${S}/assets/models/raven_circuit_engraved_latest.glb`,
+      `${S}/assets/models/aero_ai_circuit_latest.glb`,
       (t) => {
         this.model = t.scene;
         const i = Y(this.UNIFORMS, this.textures.squares),
@@ -462,7 +468,7 @@ class B {
           }
           s.isMesh &&
             (s.name.includes("GlowBox") ||
-            s.material.color.getHexString() === "f6fff6"
+              s.material.color.getHexString() === "f6fff6"
               ? (s.material = i)
               : s.name === "Plane"
                 ? (s.material = k(this.UNIFORMS, this.textures))
@@ -510,7 +516,7 @@ class B {
         this.textures.ambientOcclusionTex.wrapT =
         this.textures.roughnessTex.wrapS =
         this.textures.roughnessTex.wrapT =
-          o.RepeatWrapping));
+        o.RepeatWrapping));
     const i = 50;
     (this.textures.normalTex.repeat.set(i, i),
       this.textures.ambientOcclusionTex.repeat.set(i, i),
@@ -637,9 +643,9 @@ function k(l, t) {
     roughness: 0.3,
     emissive: 54527,
     emissiveMap: t.circuit,
-    emissiveIntensity: 4.5,
+    emissiveIntensity: 1.8,
     bumpMap: t.circuit,
-    bumpScale: 20,
+    bumpScale: 0,
     normalMap: t.normalTex,
     normalScale: new o.Vector2(0.5),
     aoMap: t.ambientOcclusionTex,
@@ -664,185 +670,185 @@ function k(l, t) {
         uFadeSmoothness: l.uFadeSmoothness,
       }),
         (e.fragmentShader = `
-		// ************ Custom Uniforms *******************
-		uniform float uTime;
-		uniform vec2 uPosition1;
-		uniform vec2 uPosition2;
-		uniform vec2 uPosition3;
-		uniform vec2 uPosition4;
-		uniform vec2 uPosition5;
-
-		uniform float uWaveScale;
-		uniform float uWaveSpeed;
-		uniform float uWaveLength;
-		uniform float uFadeDistance;
-		uniform float uFadeSmoothness;
-		// ************ Custom Uniforms *******************
-
-		#define STANDARD
-		#ifdef PHYSICAL
-			#define IOR
-			#define USE_SPECULAR
-		#endif
-		uniform vec3 diffuse;
-		uniform vec3 emissive;
-		uniform float roughness;
-		uniform float metalness;
-		uniform float opacity;
-		#ifdef IOR
-			uniform float ior;
-		#endif
-		#ifdef USE_SPECULAR
-			uniform float specularIntensity;
-			uniform vec3 specularColor;
-			#ifdef USE_SPECULAR_COLORMAP
-			uniform sampler2D specularColorMap;
-			#endif
-			#ifdef USE_SPECULAR_INTENSITYMAP
-			uniform sampler2D specularIntensityMap;
-			#endif
-		#endif
-		#ifdef USE_CLEARCOAT
-			uniform float clearcoat;
-			uniform float clearcoatRoughness;
-		#endif
-		#ifdef USE_IRIDESCENCE
-			uniform float iridescence;
-			uniform float iridescenceIOR;
-			uniform float iridescenceThicknessMinimum;
-			uniform float iridescenceThicknessMaximum;
-		#endif
-		#ifdef USE_SHEEN
-			uniform vec3 sheenColor;
-			uniform float sheenRoughness;
-			#ifdef USE_SHEEN_COLORMAP
-			uniform sampler2D sheenColorMap;
-			#endif
-			#ifdef USE_SHEEN_ROUGHNESSMAP
-			uniform sampler2D sheenRoughnessMap;
-			#endif
-		#endif
-		#ifdef USE_ANISOTROPY
-			uniform vec2 anisotropyVector;
-			#ifdef USE_ANISOTROPYMAP
-			uniform sampler2D anisotropyMap;
-			#endif
-		#endif
-		varying vec3 vViewPosition;
-		#include <common>
-		#include <packing>
-		#include <dithering_pars_fragment>
-		#include <color_pars_fragment>
-		#include <uv_pars_fragment>
-		#include <map_pars_fragment>
-		#include <alphamap_pars_fragment>
-		#include <alphatest_pars_fragment>
-		#include <alphahash_pars_fragment>
-		#include <aomap_pars_fragment>
-		#include <lightmap_pars_fragment>
-		#include <emissivemap_pars_fragment>
-		#include <iridescence_fragment>
-		#include <cube_uv_reflection_fragment>
-		#include <envmap_common_pars_fragment>
-		#include <envmap_physical_pars_fragment>
-		#include <fog_pars_fragment>
-		#include <lights_pars_begin>
-		#include <normal_pars_fragment>
-		#include <lights_physical_pars_fragment>
-		#include <transmission_pars_fragment>
-		#include <shadowmap_pars_fragment>
-		#include <bumpmap_pars_fragment>
-		#include <normalmap_pars_fragment>
-		#include <clearcoat_pars_fragment>
-		#include <iridescence_pars_fragment>
-		#include <roughnessmap_pars_fragment>
-		#include <metalnessmap_pars_fragment>
-		#include <logdepthbuf_pars_fragment>
-		#include <clipping_planes_pars_fragment>
-		float createWave(vec2 _pos, vec2 vEmissiveMapUv) {
-			vec2 uv = vEmissiveMapUv;
-			uv = uv * 2. - 1.;
-			uv += _pos;
-			uv *= uWaveScale;
-
-			// Make the distance field
-			// float d = length(abs(uv));
-			float d = length( max(abs(uv) - .05, 0.));
-
-			// Visualize the distance field
-			float wave = fract(d*10.0 - uTime *uWaveSpeed);
-			wave = smoothstep(uWaveLength, 1.0, wave);
-
-			// fade out the wave effect
-			wave *= smoothstep(uFadeDistance+uFadeSmoothness,uFadeDistance, d);
-			return wave;
-		}
-		void main() {
-			vec4 diffuseColor = vec4( diffuse, opacity );
-			#include <clipping_planes_fragment>
-			ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-			vec3 totalEmissiveRadiance = emissive;
-			#include <logdepthbuf_fragment>
-			#include <map_fragment>
-			#include <color_fragment>
-			#include <alphamap_fragment>
-			#include <alphatest_fragment>
-			#include <alphahash_fragment>
-			#include <roughnessmap_fragment>
-			#include <metalnessmap_fragment>
-			#include <normal_fragment_begin>
-			#include <normal_fragment_maps>
-			#include <clearcoat_normal_fragment_begin>
-			#include <clearcoat_normal_fragment_maps>
-
-			// ************** Custom <emissivemap_fragment> *******************
-			#ifdef USE_EMISSIVEMAP
-			vec4 emissiveColor = texture2D( emissiveMap, vEmissiveMapUv );
-			float emissiveSelection = step(0.6,emissiveColor.r);
-			emissiveColor.rgb = emissiveColor.rgb * emissiveSelection;
-
-			// ******* wave effect ********
-				float wave = 0.;
-				wave += createWave(uPosition1, vEmissiveMapUv);
-				wave += createWave(uPosition2, vEmissiveMapUv);
-				wave += createWave(uPosition3, vEmissiveMapUv);
-				wave += createWave(uPosition4, vEmissiveMapUv);
-				wave += createWave(uPosition5, vEmissiveMapUv);
-
-			// ******* wave effect ********
-
-			totalEmissiveRadiance *= emissiveColor.rgb * wave;
-			#endif
-			// ************** Custom <emissivemap_fragment> *******************
-
-			#include <lights_physical_fragment>
-			#include <lights_fragment_begin>
-			#include <lights_fragment_maps>
-			#include <lights_fragment_end>
-			#include <aomap_fragment>
-			vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
-			vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
-			#include <transmission_fragment>
-			vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
-			#ifdef USE_SHEEN
-			float sheenEnergyComp = 1.0 - 0.157 * max3( material.sheenColor );
-			outgoingLight = outgoingLight * sheenEnergyComp + sheenSpecularDirect + sheenSpecularIndirect;
-			#endif
-			#ifdef USE_CLEARCOAT
-			float dotNVcc = saturate( dot( geometryClearcoatNormal, geometryViewDir ) );
-			vec3 Fcc = F_Schlick( material.clearcoatF0, material.clearcoatF90, dotNVcc );
-			outgoingLight = outgoingLight * ( 1.0 - material.clearcoat * Fcc ) + ( clearcoatSpecularDirect + clearcoatSpecularIndirect ) * material.clearcoat;
-			#endif
-			#include <opaque_fragment>
-			#include <tonemapping_fragment>
-			#include <colorspace_fragment>
-			#include <fog_fragment>
-			#include <premultiplied_alpha_fragment>
-			#include <dithering_fragment>
-
-			// gl_FragColor = vec4( mix(vec3(1.),vec3(0.),wave) ,1.);
-		}
-    `));
+ 		// ************ Custom Uniforms *******************
+ 		uniform float uTime;
+ 		uniform vec2 uPosition1;
+ 		uniform vec2 uPosition2;
+ 		uniform vec2 uPosition3;
+ 		uniform vec2 uPosition4;
+ 		uniform vec2 uPosition5;
+ 
+ 		uniform float uWaveScale;
+ 		uniform float uWaveSpeed;
+ 		uniform float uWaveLength;
+ 		uniform float uFadeDistance;
+ 		uniform float uFadeSmoothness;
+ 		// ************ Custom Uniforms *******************
+ 
+ 		#define STANDARD
+ 		#ifdef PHYSICAL
+ 			#define IOR
+ 			#define USE_SPECULAR
+ 		#endif
+ 		uniform vec3 diffuse;
+ 		uniform vec3 emissive;
+ 		uniform float roughness;
+ 		uniform float metalness;
+ 		uniform float opacity;
+ 		#ifdef IOR
+ 			uniform float ior;
+ 		#endif
+ 		#ifdef USE_SPECULAR
+ 			uniform float specularIntensity;
+ 			uniform vec3 specularColor;
+ 			#ifdef USE_SPECULAR_COLORMAP
+ 			uniform sampler2D specularColorMap;
+ 			#endif
+ 			#ifdef USE_SPECULAR_INTENSITYMAP
+ 			uniform sampler2D specularIntensityMap;
+ 			#endif
+ 		#endif
+ 		#ifdef USE_CLEARCOAT
+ 			uniform float clearcoat;
+ 			uniform float clearcoatRoughness;
+ 		#endif
+ 		#ifdef USE_IRIDESCENCE
+ 			uniform float iridescence;
+ 			uniform float iridescenceIOR;
+ 			uniform float iridescenceThicknessMinimum;
+ 			uniform float iridescenceThicknessMaximum;
+ 		#endif
+ 		#ifdef USE_SHEEN
+ 			uniform vec3 sheenColor;
+ 			uniform float sheenRoughness;
+ 			#ifdef USE_SHEEN_COLORMAP
+ 			uniform sampler2D sheenColorMap;
+ 			#endif
+ 			#ifdef USE_SHEEN_ROUGHNESSMAP
+ 			uniform sampler2D sheenRoughnessMap;
+ 			#endif
+ 		#endif
+ 		#ifdef USE_ANISOTROPY
+ 			uniform vec2 anisotropyVector;
+ 			#ifdef USE_ANISOTROPYMAP
+ 			uniform sampler2D anisotropyMap;
+ 			#endif
+ 		#endif
+ 		varying vec3 vViewPosition;
+ 		#include <common>
+ 		#include <packing>
+ 		#include <dithering_pars_fragment>
+ 		#include <color_pars_fragment>
+ 		#include <uv_pars_fragment>
+ 		#include <map_pars_fragment>
+ 		#include <alphamap_pars_fragment>
+ 		#include <alphatest_pars_fragment>
+ 		#include <alphahash_pars_fragment>
+ 		#include <aomap_pars_fragment>
+ 		#include <lightmap_pars_fragment>
+ 		#include <emissivemap_pars_fragment>
+ 		#include <iridescence_fragment>
+ 		#include <cube_uv_reflection_fragment>
+ 		#include <envmap_common_pars_fragment>
+ 		#include <envmap_physical_pars_fragment>
+ 		#include <fog_pars_fragment>
+ 		#include <lights_pars_begin>
+ 		#include <normal_pars_fragment>
+ 		#include <lights_physical_pars_fragment>
+ 		#include <transmission_pars_fragment>
+ 		#include <shadowmap_pars_fragment>
+ 		#include <bumpmap_pars_fragment>
+ 		#include <normalmap_pars_fragment>
+ 		#include <clearcoat_pars_fragment>
+ 		#include <iridescence_pars_fragment>
+ 		#include <roughnessmap_pars_fragment>
+ 		#include <metalnessmap_pars_fragment>
+ 		#include <logdepthbuf_pars_fragment>
+ 		#include <clipping_planes_pars_fragment>
+ 		float createWave(vec2 _pos, vec2 vEmissiveMapUv) {
+ 			vec2 uv = vEmissiveMapUv;
+ 			uv = uv * 2. - 1.;
+ 			uv += _pos;
+ 			uv *= uWaveScale;
+ 
+ 			// Make the distance field
+ 			// float d = length(abs(uv));
+ 			float d = length( max(abs(uv) - .05, 0.));
+ 
+ 			// Visualize the distance field
+ 			float wave = fract(d*10.0 - uTime *uWaveSpeed);
+ 			wave = smoothstep(uWaveLength, 1.0, wave);
+ 
+ 			// fade out the wave effect
+ 			wave *= smoothstep(uFadeDistance+uFadeSmoothness,uFadeDistance, d);
+ 			return wave;
+ 		}
+ 		void main() {
+ 			vec4 diffuseColor = vec4( diffuse, opacity );
+ 			#include <clipping_planes_fragment>
+ 			ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+ 			vec3 totalEmissiveRadiance = emissive;
+ 			#include <logdepthbuf_fragment>
+ 			#include <map_fragment>
+ 			#include <color_fragment>
+ 			#include <alphamap_fragment>
+ 			#include <alphatest_fragment>
+ 			#include <alphahash_fragment>
+ 			#include <roughnessmap_fragment>
+ 			#include <metalnessmap_fragment>
+ 			#include <normal_fragment_begin>
+ 			#include <normal_fragment_maps>
+ 			#include <clearcoat_normal_fragment_begin>
+ 			#include <clearcoat_normal_fragment_maps>
+ 
+ 			// ************** Custom <emissivemap_fragment> *******************
+ 			#ifdef USE_EMISSIVEMAP
+ 			vec4 emissiveColor = texture2D( emissiveMap, vEmissiveMapUv );
+ 
+ 			// ******* wave effect ********
+ 
+ 				float wave = 0.;
+ 				wave += createWave(uPosition1, vEmissiveMapUv);
+ 				wave += createWave(uPosition2, vEmissiveMapUv);
+ 				wave += createWave(uPosition3, vEmissiveMapUv);
+ 				wave += createWave(uPosition4, vEmissiveMapUv);
+ 				wave += createWave(uPosition5, vEmissiveMapUv);
+ 
+ 			// ******* wave effect ********
+ 
+ 			totalEmissiveRadiance *= emissiveColor.rgb * wave;
+ 			#endif
+ 			// ************** Custom <emissivemap_fragment> *******************
+ 
+ 			#include <lights_physical_fragment>
+ 			#include <lights_fragment_begin>
+ 			#include <lights_fragment_maps>
+ 			#include <lights_fragment_end>
+ 			#include <aomap_fragment>
+ 			vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
+ 			vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+ 			#include <transmission_fragment>
+ 			vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+ 			#ifdef USE_SHEEN
+ 			float sheenEnergyComp = 1.0 - 0.157 * max3( material.sheenColor );
+ 			outgoingLight = outgoingLight * sheenEnergyComp + sheenSpecularDirect + sheenSpecularIndirect;
+ 			#endif
+ 			#ifdef USE_CLEARCOAT
+ 			float dotNV = dot( normal, vViewPosition );
+ 			vec3 clearcoatSpecular = clearcoatSpecularDirect + clearcoatSpecularIndirect;
+ 			outgoingLight = outgoingLight * ( 1.0 - material.clearcoat * BRDF_GGX_Specular_Reflectance( dotNV, vec3( 0.04 ), material.clearcoatRoughness ) ) + clearcoatSpecular;
+ 			#endif
+ 
+ 			#include <opaque_fragment>
+ 			#include <tonemapping_fragment>
+ 			#include <colorspace_fragment>
+ 			#include <fog_fragment>
+ 			#include <premultiplied_alpha_fragment>
+ 			#include <dithering_fragment>
+ 
+ 			// gl_FragColor = vec4( mix(vec3(1.),vec3(0.),wave) ,1.);
+ 		}
+     `));
     }),
     i
   );
@@ -871,47 +877,47 @@ function Y(l, t) {
       fogFar: { value: 20 },
     },
     vertexShader: `
-			uniform float uTime;
-			varying vec2 vUv;
-			// FOG
-			#define USE_FOG true
-			#include <common>
-			#include <fog_pars_vertex>
-			// FOG
-			void main() {
-				// FOG
-				#include <begin_vertex>
-				#include <project_vertex>
-				#include <fog_vertex>
-				// FOG
-				vUv = uv;
-				vec3 pos = position;
-				gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-			}
-		`,
+ 			uniform float uTime;
+ 			varying vec2 vUv;
+ 			// FOG
+ 			#define USE_FOG true
+ 			#include <common>
+ 			#include <fog_pars_vertex>
+ 			// FOG
+ 			void main() {
+ 				// FOG
+ 				#include <begin_vertex>
+ 				#include <project_vertex>
+ 				#include <fog_vertex>
+ 				// FOG
+ 				vUv = uv;
+ 				vec3 pos = position;
+ 				gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+ 			}
+ 		`,
     fragmentShader: `
-			uniform sampler2D tex;
-			uniform vec3 uColor1;
-			uniform vec3 uColor2;
-
-			varying vec2 vUv;
-
-			// FOG
-			#define USE_FOG true
-			#include <fog_pars_fragment>
-			// FOG
-
-			void main() {
-				vec4 tex = texture2D(tex, vUv);
-
-				vec3 color = mix(uColor1, uColor2, tex.r);
-				gl_FragColor = vec4(color, 1.0);
-				// FOG
-				#include <fog_fragment>
-				// FOG
-			}
-
-		`,
+ 			uniform sampler2D tex;
+ 			uniform vec3 uColor1;
+ 			uniform vec3 uColor2;
+ 
+ 			varying vec2 vUv;
+ 
+ 			// FOG
+ 			#define USE_FOG true
+ 			#include <fog_pars_fragment>
+ 			// FOG
+ 
+ 			void main() {
+ 				vec4 tex = texture2D(tex, vUv);
+ 
+ 				vec3 color = mix(uColor1, uColor2, tex.r);
+ 				gl_FragColor = vec4(color, 1.0);
+ 				// FOG
+ 				#include <fog_fragment>
+ 				// FOG
+ 			}
+ 
+ 		`,
   });
 }
 function $(l, t, i) {
@@ -924,15 +930,15 @@ function $(l, t, i) {
         if (s)
           gsap.utils.toArray(".section").forEach((u, m) => {
             const r = gsap.timeline({
-                defaults: { ease: "none" },
-                scrollTrigger: {
-                  trigger: u,
-                  end: "top top",
-                  ease: "none",
-                  scrub: !0,
-                  id: `section-${m}`,
-                },
-              }),
+              defaults: { ease: "none" },
+              scrollTrigger: {
+                trigger: u,
+                end: "top top",
+                ease: "none",
+                scrub: !0,
+                id: `section-${m}`,
+              },
+            }),
               g = t[m];
             (r.to(
               l.position,
@@ -948,15 +954,15 @@ function $(l, t, i) {
           });
         else {
           const u = gsap.timeline({
-              defaults: { ease: "power2.inOut" },
-              scrollTrigger: {
-                trigger: ".tabs-trigger",
-                scrub: 1.5,
-                start: "top bottom",
-                end: "bottom bottom",
-                id: "section",
-              },
-            }),
+            defaults: { ease: "power2.inOut" },
+            scrollTrigger: {
+              trigger: ".tabs-trigger",
+              scrub: 1.5,
+              start: "top bottom",
+              end: "bottom bottom",
+              id: "section",
+            },
+          }),
             m = [-1, 1, -1, 1, -2],
             r = [-1.5, 1.5, -1.2, 2, 0],
             g = [1, 1, 1, 1, 0];
