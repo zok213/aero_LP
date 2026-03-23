@@ -379,16 +379,41 @@ class B {
           ((a = O.mergeGeometries(g)),
             a.center(),
             a.rotateX(-Math.PI / 2),
+            a.rotateY(Math.PI), // Rotate 180 degrees
             s.includes("aeroAiLogo"))
         ) {
-          a.scale(0.0014, 0.0014, 0.0014);
-          const n = new o.Mesh(a, e);
-          n.position.set(-6.36641, 0.66, -15.1066);
-          const c = n.clone();
-          c.position.set(11.0921, 0.66, -5.28589);
-          const d = n.clone();
-          (d.position.set(-7.32533, 0.66, 22.5073),
-            this.scene.add(n, c, d));
+          a.scale(0.0022, 0.0022, 0.0022);
+
+          const logoGroup = new o.Group();
+
+          const logoMesh = new o.Mesh(a, e);
+          logoMesh.position.y = 0.01; // Slightly above background
+          logoMesh.renderOrder = 2;
+
+          const bgGeom = new o.PlaneGeometry(1.6, 0.8);
+          const bgMat = new o.MeshBasicMaterial({
+            color: 0x004488, // Blue that matches the chip surface perfectly
+            side: o.DoubleSide
+          });
+          const bgMesh = new o.Mesh(bgGeom, bgMat);
+          bgMesh.rotateX(-Math.PI / 2);
+          bgMesh.renderOrder = 1;
+
+          logoGroup.add(logoMesh, bgMesh);
+
+          // Instance 1: About Us?
+          const g1 = logoGroup.clone();
+          g1.position.set(-6.36641, 0.65, -15.1066);
+
+          // Instance 2: Hero?
+          const g2 = logoGroup.clone();
+          g2.position.set(11.0921, 0.65, -5.28589);
+
+          // Instance 3: Footer/Other?
+          const g3 = logoGroup.clone();
+          g3.position.set(-7.32533, 0.65, 22.5073);
+
+          this.scene.add(g1, g2, g3);
         } else if (s.includes("decentralized_icon")) {
           a.scale(53e-5, 53e-5, 53e-5);
           const n = [
