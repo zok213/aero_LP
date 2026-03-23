@@ -382,7 +382,7 @@ class B {
             a.rotateY(Math.PI), // Rotate 180 degrees
             s.includes("aeroAiLogo"))
         ) {
-          a.scale(0.0022, 0.0022, 0.0022);
+          a.scale(0.0016, 0.0016, 0.0016);
 
           const logoGroup = new o.Group();
 
@@ -390,13 +390,21 @@ class B {
           logoMesh.position.y = 0.01; // Slightly above background
           logoMesh.renderOrder = 2;
 
-          const bgGeom = new o.PlaneGeometry(1.6, 0.8);
-          const bgMat = new o.MeshBasicMaterial({
-            color: 0x004488, // Blue that matches the chip surface perfectly
+          const bgGeom = new o.PlaneGeometry(1.8, 0.8);
+          const bgMat = new o.MeshStandardMaterial({
+            color: 0x000810, // Very dark blue to mask the underlying glowing logo
+            metalness: 0.9,
+            roughness: 0.1,
+            normalMap: this.textures.normalTex,
+            normalScale: new o.Vector2(0.2),
+            aoMap: this.textures.ambientOcclusionTex,
+            aoMapIntensity: 0.5,
+            roughnessMap: this.textures.roughnessTex,
             side: o.DoubleSide
           });
           const bgMesh = new o.Mesh(bgGeom, bgMat);
           bgMesh.rotateX(-Math.PI / 2);
+          bgMesh.position.y = 0.008; // Increased slightly to prevent Z-fighting at angles
           bgMesh.renderOrder = 1;
 
           logoGroup.add(logoMesh, bgMesh);
