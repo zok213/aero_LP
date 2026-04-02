@@ -89,6 +89,8 @@
     .section {
       position: relative;
       z-index: 0;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
 
     .fade-out {
@@ -1041,7 +1043,8 @@ outline: 3px solid yellow !important;
                   <p class="paragraph-2 small-type">Build <strong>visual intelligence</strong> that goes from idea to
                     deployed application with our end-to-end platform. Transform your <strong>CCTV networks</strong>,
                     <strong>Drones</strong>, and <strong>Robotics</strong> into scalable, secure <strong>Edge AI
-                      systems</strong>.<br></p>
+                      systems</strong>.<br>
+                  </p>
                   <div class="text-black_background"></div>
                 </div>
                 <div id="w-node-a49e3307-2c17-a41d-0367-c533a7c01010-e40465cd"
@@ -1094,7 +1097,8 @@ outline: 3px solid yellow !important;
                   <p class="paragraph-3">We are on a mission to <strong>democratize computer vision</strong>.
                     <strong>Aero AI</strong> is built by industry experts to ensure that cutting-edge AI is
                     <strong>practical</strong>, <strong>scalable</strong>, and <strong>highly secure</strong> for
-                    <strong>real-world applications</strong>.</p>
+                    <strong>real-world applications</strong>.
+                  </p>
                   <div class="text-black_background"></div>
                 </div>
                 <div class="spacer-medium"></div>
@@ -1409,16 +1413,26 @@ outline: 3px solid yellow !important;
               overflow: hidden;
             }
 
+            .project-centering_wrapper {
+              position: relative;
+              width: 100%;
+              transition: none;
+              will-change: transform;
+            }
+
             .project-marquee_track {
               display: flex;
               width: max-content;
               animation: project_marquee 100s linear infinite;
               gap: 60px;
               padding: 0 30px;
+              will-change: transform;
+              transform: translate3d(0, 0, 0);
+              backface-visibility: hidden;
             }
 
-            .project-marquee_track:hover {
-              animation-play-state: paused;
+            .project-marquee_track.is-paused {
+              animation-play-state: paused !important;
             }
 
             @keyframes project_marquee {
@@ -1565,152 +1579,199 @@ outline: 3px solid yellow !important;
                 padding: 20px;
               }
             }
+
+            .project-marquee_track.is-halted {
+              animation: none !important;
+              transform: translateX(0) !important;
+            }
+
+            .showcase_simple-controls {
+              position: absolute;
+              bottom: 40px;
+              left: 50%;
+              transform: translateX(-50%);
+              display: flex;
+              gap: 20px;
+              z-index: 100;
+            }
+
+            .swing-arrow {
+              width: 50px;
+              height: 50px;
+              background: rgba(0, 255, 255, 0.05);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(0, 255, 255, 0.2);
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              color: #00ffff;
+              font-family: 'Space Mono', monospace;
+              font-size: 20px;
+              box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+            }
+
+            .swing-arrow:hover {
+              background: rgba(0, 255, 255, 0.15);
+              box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+              transform: scale(1.1);
+            }
           </style>
 
 
 
           <div class="project-marquee_wrapper">
-            <div class="project-marquee_track">
-              <!-- Winch AI -->
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">EDGEML SYSTEM</div>
-                  <h3 class="card_title">Winch AI</h3>
-                  <p class="card_desc">Autonomous Delivery System with real-time package touchdown detection. Low
-                    latency edge deployment for precise payload release under 100ms.</p>
+            <div class="project-centering_wrapper">
+              <div class="project-marquee_track">
+                <!-- Winch AI -->
+                <div class="project-slide" data-slide-id="winch">
+                  <div class="home_partners_content">
+                    <div class="card_tag">EDGEML SYSTEM</div>
+                    <h3 class="card_title">Winch AI</h3>
+                    <p class="card_desc">Autonomous Delivery System with real-time package touchdown detection. Low
+                      latency edge deployment for precise payload release under 100ms.</p>
+                  </div>
+                  <div class="project-media_wrapper">
+                    <img src="images/winch_optimized.gif" alt="Winch AI" loading="lazy">
+                    <div class="project-slide_scanline"></div>
+                  </div>
                 </div>
-                <div class="project-media_wrapper">
-                  <img src="images/winch_optimized.gif" alt="Winch AI" loading="lazy">
-                  <div class="project-slide_scanline"></div>
+                <!-- OpenLander -->
+                <div class="project-slide" data-slide-id="lander">
+                  <div class="home_partners_content">
+                    <div class="card_tag">AUTONOMOUS FLIGHT</div>
+                    <h3 class="card_title">OpenLander</h3>
+                    <p class="card_desc">UAV safety system for autonomous landing plot detection. Real-time path
+                      optimization and hazard avoidance.</p>
+                  </div>
+                  <div class="project-media_wrapper">
+                    <img src="images/lander_optimized.gif" alt="OpenLander" loading="lazy">
+                  </div>
+                </div>
+                <!-- Road Guard -->
+                <div class="project-slide" data-slide-id="guard">
+                  <div class="home_partners_content">
+                    <div class="card_tag">INFRASTRUCTURE</div>
+                    <h3 class="card_title">Road Guard</h3>
+                    <p class="card_desc">Computer vision for real-time pothole and crack detection. Automating urban
+                      infrastructure monitoring.</p>
+                  </div>
+                  <div class="project-media_wrapper">
+                    <img src="images/road_damage_optimized.gif" alt="Road Damage Detection" loading="lazy">
+                  </div>
+                </div>
+                <!-- Traffic AI -->
+                <div class="project-slide" data-slide-id="traffic">
+                  <div class="home_partners_content">
+                    <div class="card_tag">SMART CITY</div>
+                    <h3 class="card_title">Traffic AI</h3>
+                    <p class="card_desc">Aerial surveillance for urban enforcement. Real-time vehicle tracking and
+                      autonomous license plate capture.</p>
+                  </div>
+                  <div class="project-media_wrapper">
+                    <img src="images/traffic_optimized.gif" alt="Traffic Citation System" loading="lazy">
+                    <div class="project-slide_scanline"></div>
+                  </div>
+                </div>
+                <!-- DroneAgent -->
+                <div class="project-slide" data-slide-id="agent">
+                  <div class="home_partners_content">
+                    <div class="card_tag">AGI ON DRONES</div>
+                    <h3 class="card_title">DroneAgent</h3>
+                    <p class="card_desc">Large Vision Language Model (LVLM) for goal-directed autonomy. Reasoning at the
+                      edge.</p>
+                  </div>
+                  <div class="project-media_wrapper">
+                    <img src="images/drone_agent_optimized.gif" alt="DroneAgent" loading="lazy">
+                  </div>
+                </div>
+                <!-- Tactical Edge AI -->
+                <div class="project-slide" data-slide-id="tactical">
+                  <div class="home_partners_content">
+                    <div class="card_tag">SEARCH & RESCUE</div>
+                    <h3 class="card_title">Tactical Edge AI</h3>
+                    <p class="card_desc">Rapid victim detection and site recon in high-risk environments.</p>
+                  </div>
+                  <div class="project-media_wrapper">
+                    <video autoplay loop muted playsinline>
+                      <source src="images/tactical_rescue_optimized.mp4" type="video/mp4">
+                    </video>
+                    <div class="project-slide_scanline"></div>
+                  </div>
+                </div>
+                <!-- Duplicate Set (for marquee seamlessness) -->
+                <div class="project-slide">
+                  <div class="home_partners_content">
+                    <div class="card_tag">EDGEML SYSTEM</div>
+                    <h3 class="card_title">Winch AI</h3>
+                  </div>
+                  <div class="project-media_wrapper"><img src="images/winch_optimized.gif" alt="Winch AI"
+                      loading="lazy">
+                  </div>
+                </div>
+                <div class="project-slide">
+                  <div class="home_partners_content">
+                    <div class="card_tag">AUTONOMOUS FLIGHT</div>
+                    <h3 class="card_title">OpenLander</h3>
+                  </div>
+                  <div class="project-media_wrapper"><img src="images/lander_optimized.gif" alt="OpenLander"
+                      loading="lazy"></div>
+                </div>
+                <div class="project-slide">
+                  <div class="home_partners_content">
+                    <div class="card_tag">INFRASTRUCTURE</div>
+                    <h3 class="card_title">Road Guard</h3>
+                  </div>
+                  <div class="project-media_wrapper"><img src="images/road_damage_optimized.gif"
+                      alt="Road Damage Detection" loading="lazy"></div>
+                </div>
+                <div class="project-slide">
+                  <div class="home_partners_content">
+                    <div class="card_tag">SMART CITY</div>
+                    <h3 class="card_title">Traffic AI</h3>
+                  </div>
+                  <div class="project-media_wrapper"><img src="images/traffic_optimized.gif"
+                      alt="Traffic Citation System" loading="lazy"></div>
+                </div>
+                <div class="project-slide">
+                  <div class="home_partners_content">
+                    <div class="card_tag">AGI ON DRONES</div>
+                    <h3 class="card_title">DroneAgent</h3>
+                  </div>
+                  <div class="project-media_wrapper"><img src="images/drone_agent_optimized.gif" alt="DroneAgent"
+                      loading="lazy"></div>
+                </div>
+                <div class="project-slide">
+                  <div class="home_partners_content">
+                    <div class="card_tag">SEARCH & RESCUE</div>
+                    <h3 class="card_title">Tactical Edge AI</h3>
+                  </div>
+                  <div class="project-media_wrapper">
+                    <video autoplay loop muted playsinline>
+                      <source src="images/tactical_rescue_optimized.mp4" type="video/mp4">
+                    </video>
+                  </div>
                 </div>
               </div>
-              <!-- OpenLander -->
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">AUTONOMOUS FLIGHT</div>
-                  <h3 class="card_title">OpenLander</h3>
-                  <p class="card_desc">UAV safety system for autonomous landing plot detection. Real-time path
-                    optimization and hazard avoidance.</p>
-                </div>
-                <div class="project-media_wrapper">
-                  <img src="images/lander_optimized.gif" alt="OpenLander" loading="lazy">
-                </div>
-              </div>
-              <!-- Road Guard -->
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">INFRASTRUCTURE</div>
-                  <h3 class="card_title">Road Guard</h3>
-                  <p class="card_desc">Computer vision for real-time pothole and crack detection. Automating urban
-                    infrastructure monitoring.</p>
-                </div>
-                <div class="project-media_wrapper">
-                  <img src="images/road_damage_optimized.gif" alt="Road Damage Detection" loading="lazy">
-                </div>
-              </div>
-              <!-- Traffic AI -->
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">SMART CITY</div>
-                  <h3 class="card_title">Traffic AI</h3>
-                  <p class="card_desc">Aerial surveillance for urban enforcement. Real-time vehicle tracking and
-                    autonomous license plate capture.</p>
-                </div>
-                <div class="project-media_wrapper">
-                  <img src="images/traffic_optimized.gif" alt="Traffic Citation System" loading="lazy">
-                  <div class="project-slide_scanline"></div>
-                </div>
-              </div>
-              <!-- DroneAgent -->
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">AGI ON DRONES</div>
-                  <h3 class="card_title">DroneAgent</h3>
-                  <p class="card_desc">Large Vision Language Model (LVLM) for goal-directed autonomy. Reasoning at the
-                    edge.</p>
-                </div>
-                <div class="project-media_wrapper">
-                  <img src="images/drone_agent_optimized.gif" alt="DroneAgent" loading="lazy">
-                </div>
-              </div>
-              <!-- Tactical Edge AI -->
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">SEARCH & RESCUE</div>
-                  <h3 class="card_title">Tactical Edge AI</h3>
-                  <p class="card_desc">Rapid victim detection and site recon in high-risk environments.</p>
-                </div>
-                <div class="project-media_wrapper">
-                  <video autoplay loop muted playsinline>
-                    <source src="images/tactical_rescue_optimized.mp4" type="video/mp4">
-                  </video>
-                  <div class="project-slide_scanline"></div>
-                </div>
-              </div>
-              <!-- Duplicate Set -->
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">EDGEML SYSTEM</div>
-                  <h3 class="card_title">Winch AI</h3>
-                </div>
-                <div class="project-media_wrapper"><img src="images/winch_optimized.gif" alt="Winch AI" loading="lazy">
-                </div>
-              </div>
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">AUTONOMOUS FLIGHT</div>
-                  <h3 class="card_title">OpenLander</h3>
-                </div>
-                <div class="project-media_wrapper"><img src="images/lander_optimized.gif" alt="OpenLander"
-                    loading="lazy"></div>
-              </div>
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">INFRASTRUCTURE</div>
-                  <h3 class="card_title">Road Guard</h3>
-                </div>
-                <div class="project-media_wrapper"><img src="images/road_damage_optimized.gif"
-                    alt="Road Damage Detection" loading="lazy"></div>
-              </div>
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">SMART CITY</div>
-                  <h3 class="card_title">Traffic AI</h3>
-                </div>
-                <div class="project-media_wrapper"><img src="images/traffic_optimized.gif" alt="Traffic Citation System"
-                    loading="lazy"></div>
-              </div>
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">AGI ON DRONES</div>
-                  <h3 class="card_title">DroneAgent</h3>
-                </div>
-                <div class="project-media_wrapper"><img src="images/drone_agent_optimized.gif" alt="DroneAgent"
-                    loading="lazy"></div>
-              </div>
-              <div class="project-slide">
-                <div class="home_partners_content">
-                  <div class="card_tag">SEARCH & RESCUE</div>
-                  <h3 class="card_title">Tactical Edge AI</h3>
-                </div>
-                <div class="project-media_wrapper">
-                  <video autoplay loop muted playsinline>
-                    <source src="images/tactical_rescue_optimized.mp4" type="video/mp4">
-                  </video>
-                </div>
-              </div>
+            </div>
+
+            <div class="showcase_simple-controls">
+              <div id="showcase-prev" class="swing-arrow"> &lt; </div>
+              <div id="showcase-next" class="swing-arrow"> &gt; </div>
             </div>
           </div>
         </section>
         <div class="sticky_wrap scroll-snap_wrap">
-          <div id="section-6" data-lenis-prevent="" class="scroll-trigger section"></div>
           <div class="container-large is-mobile-padding-small">
-            <section class="section_home_stats section">
+            <section id="section-6" data-lenis-prevent="" class="section_home_stats section">
               <div data-scroll-time="0" class="home_stats_sticky">
                 <div class="home_stats_header-flex is-white-30">
                   <h2 class="pixel-heading">PLATFORM STATS</h2>
-                  <div class="home_stats_icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
-                      viewBox="0 0 64 64" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true" role="img">
+                  <div class="home_stats_icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%"
+                      height="100%" viewBox="0 0 64 64" fill="none" preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true" role="img">
                       <path d="M4.66219 16.2165L32 0.433013L59.3378 16.2165V47.7835L32 63.567L4.66219 47.7835V16.2165Z"
                         stroke="currentColor" stroke-width="0.75"></path>
                       <path
@@ -1741,7 +1802,8 @@ outline: 3px solid yellow !important;
                     <h3 class="sub-header">SECURITY</h3>
                     <div class="spacer-small"></div>
                     <div class="max-width-xsmall">
-                      <p class="text-size-small">100% Secure enterprise-grade deployments with highly encrypted on-premise
+                      <p class="text-size-small">100% Secure enterprise-grade deployments with highly encrypted
+                        on-premise
                         infrastructure for maximum data privacy.</p>
                     </div>
                   </div>
@@ -1752,8 +1814,9 @@ outline: 3px solid yellow !important;
               <div data-scroll-time="0" data-theme="light" class="home_careers_component">
                 <div class="home_stats_header-flex text-color-white">
                   <h2 class="pixel-heading">CONTACT US</h2>
-                  <div class="home_stats_icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
-                      viewBox="0 0 64 64" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true" role="img">
+                  <div class="home_stats_icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%"
+                      height="100%" viewBox="0 0 64 64" fill="none" preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true" role="img">
                       <path d="M4.66219 16.2165L32 0.433013L59.3378 16.2165V47.7835L32 63.567L4.66219 47.7835V16.2165Z"
                         stroke="currentColor" stroke-width="0.75"></path>
                       <path
@@ -1763,8 +1826,8 @@ outline: 3px solid yellow !important;
                 </div>
                 <div class="spacer-large is-half"></div>
                 <div class="home_careers_content-wrapper">
-                  <div id="w-node-_4912bae6-ca9a-7bc6-90bc-1c3e065bc9e0-e40465cd" class="home_careers_image-wrapper"><img
-                      src="images/A4QpNmeoKZpt.webp" loading="lazy" sizes="100vw, 100vw"
+                  <div id="w-node-_4912bae6-ca9a-7bc6-90bc-1c3e065bc9e0-e40465cd" class="home_careers_image-wrapper">
+                    <img src="images/A4QpNmeoKZpt.webp" loading="lazy" sizes="100vw, 100vw"
                       srcset="images/sw1FbHe4b1yl.webp 500w, images/f4tfJFd1VBau.webp 800w, images/A4QpNmeoKZpt.webp 882w"
                       alt="Aero AI Expert Support and Collaboration" class="cover-absolute">
                     <div class="image_overlay is-red-10"></div>
@@ -1774,9 +1837,11 @@ outline: 3px solid yellow !important;
                     <h2 class="sub-header">Ready to Build?</h2>
                     <div class="spacer-small"></div>
                     <div class="text-rich-text is-small w-richtext">
-                      <p>Ready to Build Your Visual Intelligence Application? Connect with our Computer Vision experts to map out a customized architecture and pipeline today.</p>
+                      <p>Ready to Build Your Visual Intelligence Application? Connect with our Computer Vision experts
+                        to map out a customized architecture and pipeline today.</p>
                     </div>
-                    <div class="div-block-13"><a data-button-style="solid" href="mailto:contact@aero-ai.com" class="button w-inline-block">
+                    <div class="div-block-13"><a data-button-style="solid" href="mailto:contact@aero-ai.com"
+                        class="button w-inline-block">
                         <div>Request Demo</div>
                       </a></div>
                   </div>
@@ -1787,21 +1852,21 @@ outline: 3px solid yellow !important;
         </div>
       </div>
     </main>
-  <div id="section-8" class="footer_component">
-    <div class="section_css w-embed"></div>
-    <div class="footer_background-wrap">
-      <div class="footer_color_holder"></div><img src="images/ufUgnf88J5sO.webp" loading="lazy"
-        sizes="(max-width: 4338px) 100vw, 4338px, 100vw"
-        srcset="images/XcCHzNhyUIeO.webp 500w, images/UO9GW1HDzzcX.webp 800w, images/yAM9s9Ob7SL6.webp 1080w, images/cEO6ZHn4CcLX.png 1600w, images/EeJALaRReO4t.png 2000w, images/vCAGHfHEZktQ.png 2600w, images/xoiwhgkRMNtD.png 3200w, images/ufUgnf88J5sO.webp 4338w"
-        alt="" class="cover-absolute">
-    </div>
-    <footer class="footer">
-      <div class="footer_divider"></div>
-      <div class="container-large is-footer">
-        <div class="spacer-40"></div>
-        <div class="footer_content-wrapper">
-          <div class="footer_content-left"><a href="/" aria-current="page"
-              class="footer_logo-wrapper w-inline-block w--current">
+    <div id="section-8" class="footer_component">
+      <div class="section_css w-embed"></div>
+      <div class="footer_background-wrap">
+        <div class="footer_color_holder"></div><img src="images/ufUgnf88J5sO.webp" loading="lazy"
+          sizes="(max-width: 4338px) 100vw, 4338px, 100vw"
+          srcset="images/XcCHzNhyUIeO.webp 500w, images/UO9GW1HDzzcX.webp 800w, images/yAM9s9Ob7SL6.webp 1080w, images/cEO6ZHn4CcLX.png 1600w, images/EeJALaRReO4t.png 2000w, images/vCAGHfHEZktQ.png 2600w, images/xoiwhgkRMNtD.png 3200w, images/ufUgnf88J5sO.webp 4338w"
+          alt="" class="cover-absolute">
+      </div>
+      <footer class="footer">
+        <div class="footer_divider"></div>
+        <div class="container-large is-footer">
+          <div class="spacer-40"></div>
+          <div class="footer_content-wrapper">
+            <div class="footer_content-left"><a href="/" aria-current="page"
+                class="footer_logo-wrapper w-inline-block w--current">
                 <div class="footer_logo-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
                     viewBox="0 0 30 16" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true" role="img">
                     <path
@@ -1814,69 +1879,70 @@ outline: 3px solid yellow !important;
                       d="M24.843 14.2729L14.7353 4.09894L4.6327 14.2729C4.57597 14.3301 4.48314 14.3301 4.42641 14.2729L2.56989 12.4033C2.51316 12.3462 2.51316 12.2527 2.56989 12.1956L14.6322 0.0428461C14.6889 -0.014282 14.7817 -0.014282 14.8384 0.0428461L26.9059 12.1956C26.9626 12.2527 26.9626 12.3462 26.9059 12.4033L25.0493 14.2729C24.9926 14.3301 24.8998 14.3301 24.843 14.2729Z"
                       fill="currentColor"></path>
                   </svg></div>
-            </a>
-            <div class="max-width-small is-careers-content">
-              <p class="text-size-small">Our mission is to bridge the gap between AI research and real-world deployment
-                by providing a complete, intuitive platform optimized for diverse operational environments.</p>
-            </div><a href="https://x.com/aero_ai" target="_blank" class="footer_social-link w-inline-block">
-              <div>Follow us on</div>
-              <div class="icon-1x1-small w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
-                  viewBox="0 0 16 17" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true" role="img">
-                  <path
-                    d="M12.2174 1.76904H14.4663L9.55298 7.3847L15.3332 15.0264H10.8073L7.26253 10.3917L3.20647 15.0264H0.956125L6.21146 9.01977L0.666504 1.76904H5.30724L8.51144 6.00526L12.2174 1.76904ZM11.428 13.6802H12.6742L4.6301 3.04446H3.29281L11.428 13.6802Z"
-                    fill="currentColor"></path>
-                </svg></div>
-            </a>
+              </a>
+              <div class="max-width-small is-careers-content">
+                <p class="text-size-small">Our mission is to bridge the gap between AI research and real-world
+                  deployment
+                  by providing a complete, intuitive platform optimized for diverse operational environments.</p>
+              </div><a href="https://x.com/aero_ai" target="_blank" class="footer_social-link w-inline-block">
+                <div>Follow us on</div>
+                <div class="icon-1x1-small w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
+                    viewBox="0 0 16 17" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true" role="img">
+                    <path
+                      d="M12.2174 1.76904H14.4663L9.55298 7.3847L15.3332 15.0264H10.8073L7.26253 10.3917L3.20647 15.0264H0.956125L6.21146 9.01977L0.666504 1.76904H5.30724L8.51144 6.00526L12.2174 1.76904ZM11.428 13.6802H12.6742L4.6301 3.04446H3.29281L11.428 13.6802Z"
+                      fill="currentColor"></path>
+                  </svg></div>
+              </a>
+            </div>
+            <div class="footer_content-right">
+              <div class="footer_link_list-wrapper">
+                <div class="footer_link_header">Use Case</div>
+                <div class="spacer-small"></div>
+                <div class="footer_link_list"><a href="#section-3" class="footer_link w-inline-block">
+                    <div class="text-size-small">CCTV Security</div>
+                  </a><a href="#section-3" class="footer_link w-inline-block">
+                    <div class="text-size-small">Aerial Intelligence</div>
+                  </a><a href="#section-3" class="footer_link w-inline-block">
+                    <div class="text-size-small">Autonomous Systems</div>
+                  </a></div>
+              </div>
+              <div class="footer_link_list-wrapper">
+                <div class="footer_link_header">Company</div>
+                <div class="spacer-small"></div>
+                <div class="footer_link_list"><a href="#section-2" class="footer_link w-inline-block">
+                    <div class="text-size-small">About Us</div>
+                  </a><a href="#section-4" class="footer_link w-inline-block">
+                    <div class="text-size-small">Workflows</div>
+                  </a><a href="https://aero-ai.com/legal-page/privacy-policy" class="w-inline-block">
+                    <div class="text-size-small">Legal</div>
+                  </a></div>
+              </div>
+              <div class="footer_link_list-wrapper hide-mobile-landscape">
+                <div class="footer_link_header">Contact</div>
+                <div class="spacer-small"></div>
+                <div class="footer_link_list"><button data-button-style="primary" data-lenis-stop=""
+                    class="button is-nav-connect">
+                    <div>CONNECT NOW</div>
+                  </button></div>
+              </div>
+            </div>
           </div>
-          <div class="footer_content-right">
-            <div class="footer_link_list-wrapper">
-              <div class="footer_link_header">Use Case</div>
-              <div class="spacer-small"></div>
-              <div class="footer_link_list"><a href="#section-3" class="footer_link w-inline-block">
-                  <div class="text-size-small">CCTV Security</div>
-                </a><a href="#section-3" class="footer_link w-inline-block">
-                  <div class="text-size-small">Aerial Intelligence</div>
-                </a><a href="#section-3" class="footer_link w-inline-block">
-                  <div class="text-size-small">Autonomous Systems</div>
-                </a></div>
-            </div>
-            <div class="footer_link_list-wrapper">
-              <div class="footer_link_header">Company</div>
-              <div class="spacer-small"></div>
-              <div class="footer_link_list"><a href="#section-2" class="footer_link w-inline-block">
-                  <div class="text-size-small">About Us</div>
-                </a><a href="#section-4" class="footer_link w-inline-block">
-                  <div class="text-size-small">Workflows</div>
-                </a><a href="https://aero-ai.com/legal-page/privacy-policy" class="w-inline-block">
-                  <div class="text-size-small">Legal</div>
-                </a></div>
-            </div>
-            <div class="footer_link_list-wrapper hide-mobile-landscape">
-              <div class="footer_link_header">Contact</div>
-              <div class="spacer-small"></div>
-              <div class="footer_link_list"><button data-button-style="primary" data-lenis-stop=""
-                  class="button is-nav-connect">
-                  <div>CONNECT NOW</div>
-                </button></div>
-            </div>
-          </div>
+          <div class="spacer-40"></div>
         </div>
-        <div class="spacer-40"></div>
-      </div>
-      <div class="footer_divider"></div>
-      <div class="container-large is-footer">
-        <div class="spacer-40"></div>
-        <div class="footer_content-bottom"><a href="#" class="footer_reserved-link w-inline-block">
-            <div>© Aero AI Limited</div>
-            <div class="text-color-grey">CC 2026</div>
-            <div class="text-color-grey">all rights reserved</div>
-          </a><a href="https://www.blackpeak.ca/" target="_blank" class="footer_reserved-link w-inline-block">
-            <div><span class="text-color-grey">designed + developed by</span> PiXerse</div>
-          </a></div>
-        <div class="spacer-40"></div>
-      </div>
-    </footer>
-  </div>
+        <div class="footer_divider"></div>
+        <div class="container-large is-footer">
+          <div class="spacer-40"></div>
+          <div class="footer_content-bottom"><a href="#" class="footer_reserved-link w-inline-block">
+              <div>© Aero AI Limited</div>
+              <div class="text-color-grey">CC 2026</div>
+              <div class="text-color-grey">all rights reserved</div>
+            </a><a href="https://www.blackpeak.ca/" target="_blank" class="footer_reserved-link w-inline-block">
+              <div><span class="text-color-grey">designed + developed by</span> PiXerse</div>
+            </a></div>
+          <div class="spacer-40"></div>
+        </div>
+      </footer>
+    </div>
   </div>
   <script src="js/bKmCbKt6lV3W.js" type="text/javascript" crossorigin="anonymous"></script>
   <script src="js/ayLhXsGSLCSK.js" type="text/javascript" crossorigin="anonymous"></script>
@@ -1919,6 +1985,10 @@ outline: 3px solid yellow !important;
 
       const dots = document.querySelectorAll('.progres_bar_marker-dot');
 
+      const marqueeTrack = document.querySelector('.project-marquee_track');
+      const centeringWrapper = document.querySelector('.project-centering_wrapper');
+      const slides = document.querySelectorAll('.project-slide[data-slide-id]');
+      
       function updateDots(index) {
         dots.forEach((dot, i) => {
           if (i === index) {
@@ -1928,6 +1998,55 @@ outline: 3px solid yellow !important;
           }
         });
       }
+
+      let currentProjectIndex = 0;
+
+      function scrollToSlide(index) {
+        if (!slides[index] || !centeringWrapper) return;
+
+        // 1. Instantly halt the CSS marquee and reset it to zero baseline
+        // This is critical to ensure the slide's offsetLeft is accurate.
+        marqueeTrack.classList.add('is-halted');
+        void marqueeTrack.offsetWidth; // Force Reflow
+
+        // 2. Kill any existing GSAP movement
+        gsap.killTweensOf(centeringWrapper);
+
+        // 3. Precision Centering
+        const targetSlide = slides[index];
+        const centerOffset = (window.innerWidth / 2) - (targetSlide.offsetWidth / 2);
+        const targetX = -targetSlide.offsetLeft + centerOffset;
+
+        gsap.to(centeringWrapper, {
+          x: targetX,
+          duration: 1,
+          ease: "expo.out",
+          onComplete: () => {
+            currentProjectIndex = index;
+            // 4. Focus dwell, then resume crawl
+            gsap.delayedCall(3, () => {
+              marqueeTrack.classList.remove('is-halted');
+            });
+          }
+        });
+      }
+
+      function swingCarousel(direction) {
+        let nextIndex = direction === 'next' ? currentProjectIndex + 1 : currentProjectIndex - 1;
+        
+        // Loop back around if at ends
+        if (nextIndex < 0) nextIndex = slides.length - 1;
+        if (nextIndex >= slides.length) nextIndex = 0;
+        
+        scrollToSlide(nextIndex);
+      }
+
+      // Safe Listener Setup (Aero AI Standard)
+      const prevBtn = document.getElementById('showcase-prev');
+      const nextBtn = document.getElementById('showcase-next');
+      
+      if (prevBtn) prevBtn.addEventListener('click', () => swingCarousel('prev'));
+      if (nextBtn) nextBtn.addEventListener('click', () => swingCarousel('next'));
 
       let currentIndex = findClosestIndex();
       updateDots(currentIndex);

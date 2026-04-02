@@ -970,6 +970,12 @@ function $(l, t, i) {
                 ease: "none",
                 scrub: !0,
                 id: `section-${m}`,
+                snap: {
+                  snapTo: 1, // Snap to the target state of this section's animation
+                  duration: { min: 0.2, max: 0.8 },
+                  delay: 0.1,
+                  ease: "power2.inOut"
+                }
               },
             }),
               g = t[m];
